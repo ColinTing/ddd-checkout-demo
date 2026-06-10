@@ -1,15 +1,15 @@
 package com.github.colinting.dddcheckoutdemo.adapter.order.web.vo.response;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
  * @author 丁浩
  * @date 2022年08月23日 16:54
  */
-
-
 public final class Result<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     boolean success;
