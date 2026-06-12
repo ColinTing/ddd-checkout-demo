@@ -4,6 +4,7 @@ package com.github.colinting.dddcheckoutdemo.infrastructure.order.dao.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.colinting.dddcheckoutdemo.infrastructure.order.dao.po.OrderPO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
@@ -14,6 +15,6 @@ import org.apache.ibatis.annotations.Select;
 public interface OrderMapper extends BaseMapper<OrderPO> {
 
 
-    @Select("select * from order where id = #{orderId} and item_id = #{storeId}")
-    OrderPO findInStore(Long orderId, Long storeId);
+    @Select("select * from orders where id = #{orderId} and item_id = #{storeId}")
+    OrderPO findInStore(@Param("orderId") Long orderId, @Param("storeId") Long storeId);
 }
