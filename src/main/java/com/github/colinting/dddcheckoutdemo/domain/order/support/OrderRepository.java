@@ -11,5 +11,5 @@ import com.github.colinting.dddcheckoutdemo.domain.order.entity.OrderDO;
 
 public interface OrderRepository {
 
-    void createOrder(OrderDO order);
+    OrderDO save(OrderDO order);
 }

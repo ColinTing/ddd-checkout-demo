@@ -2,13 +2,12 @@ package com.github.colinting.dddcheckoutdemo.application.order.assemble;
 
 import com.github.colinting.dddcheckoutdemo.adapter.order.web.vo.response.OrderDTO;
 import com.github.colinting.dddcheckoutdemo.domain.order.entity.OrderDO;
-import com.github.colinting.dddcheckoutdemo.infrastructure.client.dto.response.ItemDO;
+import com.github.colinting.dddcheckoutdemo.domain.order.entity.ItemDO;
 
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
 
 /**
  * @author 丁浩
@@ -32,7 +31,5 @@ public interface OrderDtoAssembler {
         @Mapping(target = "detailAddress", source = "address.detail"),
     })
     OrderDTO orderToDTO(OrderDO savedOrder);
-
-    // 通过DTO，生成实体
 
 }

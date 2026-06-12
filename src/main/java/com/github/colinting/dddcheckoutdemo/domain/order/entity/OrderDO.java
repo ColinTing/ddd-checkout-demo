@@ -44,6 +44,10 @@ public class OrderDO {
         return  new OrderId(Long.parseLong(UUID.randomUUID().toString()));
     }
 
+    // 把原来一个在ApplicationService的计算迁移到Entity里
+    public Long getTotalCost() {
+        return itemUnitPrice * count;
+    }
 
 
 }

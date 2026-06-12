@@ -2,18 +2,19 @@ package com.github.colinting.dddcheckoutdemo.application.order;
 
 
 import com.github.colinting.dddcheckoutdemo.adapter.order.web.vo.response.OrderDTO;
-import com.github.colinting.dddcheckoutdemo.adapter.order.web.vo.response.Result;
 import com.github.colinting.dddcheckoutdemo.application.order.assemble.OrderDtoAssembler;
 import com.github.colinting.dddcheckoutdemo.application.order.dto.request.CheckoutCommand;
+import com.github.colinting.dddcheckoutdemo.application.order.dto.request.OrderQuery;
+import com.github.colinting.dddcheckoutdemo.application.order.dto.request.UpdateOrderCommand;
 import com.github.colinting.dddcheckoutdemo.domain.order.entity.OrderDO;
 import com.github.colinting.dddcheckoutdemo.domain.order.support.OrderRepository;
-import com.github.colinting.dddcheckoutdemo.infrastructure.client.dto.response.ItemDO;
-import com.github.colinting.dddcheckoutdemo.infrastructure.common.utils.SessionUtils;
-import jakarta.annotation.Resource;
+import com.github.colinting.dddcheckoutdemo.domain.order.entity.ItemDO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
+import java.util.List;
 
 /**
  * 下单服务
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@Validated
 public class CheckoutService {
 
 
@@ -34,49 +36,57 @@ public class CheckoutService {
 
     private final OrderDtoAssembler orderDtoAssembler;
 
+    // 下单
     public OrderDTO checkout(@Valid CheckoutCommand cmd) {
-        // 1) Session管理
-        Long userId = SessionUtils.getLoggedInUserId();
-        if (userId <= 0) {
-            throw new IllegalArgumentException("Not Logged In");
-        }
 
-        Long itemId = cmd.getItemId();
-        Integer quantity = cmd.getQuantity();
-
-        // 2）参数校验
-        if (itemId <= 0 || quantity <= 0 || quantity >= 1000) {
-            throw new IllegalArgumentException("Invalid Args");
-        }
-
-        // 3）外部数据补全
-        ItemDO item = itemService.getItem(itemId);
+        ItemDO item = itemService.getItem(cmd.getItemId());
         if (item == null) {
-            throw new IllegalArgumentException("Item Not Found");
+            throw new IllegalArgumentException("Item not found");
         }
 
-        // 4）调用外部服务
-        boolean withholdSuccess = inventoryService.withhold(itemId, quantity);
+        boolean withholdSuccess = inventoryService.withhold(cmd.getItemId(), cmd.getQuantity());
         if (!withholdSuccess) {
             throw new IllegalArgumentException("Inventory not enough");
         }
 
-        // 5）领域计算
-        Long cost = item.getPriceInCents() * quantity;
-
-        // 6）领域对象操作
+        // 领域对象操作
         OrderDO order = new OrderDO();
-        order.setItemId(itemId);
-        order.setBuyerId(userId);
+        order.setBuyerId(cmd.getUserId());
         order.setSellerId(item.getSellerId());
-        order.setCount(quantity);
-        order.setTotalCost(cost);
+        order.setItemId(item.getItemId());
+        order.setItemTitle(item.getTitle());
+        order.setItemUnitPrice(item.getPriceInCents());
+        order.setCount(cmd.getQuantity());
 
-        // 7）数据持久化
-        orderRepository.createOrder(order);
+        OrderDO savedOrder = orderRepository.save(order);
 
-        // 8）返回
-       return orderDtoAssembler.orderToDTO(order);
+        return orderDtoAssembler.orderToDTO(savedOrder);
+    }
+
+    public OrderDTO updateOrder(@Valid UpdateOrderCommand cmd) {
+        return null;
+    }
+
+    // 支付成功
+//    OrderDTO payReceived(@Valid PaymentReceivedEvent event);
+
+    // 支付取消
+//    OrderDTO payCanceled(@Valid PaymentCanceledEvent event);
+
+    // 发货
+//    OrderDTO packageSent(@Valid PackageSentEvent event);
+
+    // 收货
+//    OrderDTO delivered(@Valid DeliveredEvent event);
+
+    // 批量查询
+    public List<OrderDTO> query(OrderQuery query) {
+        return null;
+    }
+
+    // 单个查询
+    public OrderDTO getOrder(Long orderId) {
+        return null;
     }
 
 }

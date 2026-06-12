@@ -1,6 +1,6 @@
 package com.github.colinting.dddcheckoutdemo.application.order;
 
-import com.github.colinting.dddcheckoutdemo.infrastructure.client.dto.response.ItemDO;
+import com.github.colinting.dddcheckoutdemo.domain.order.entity.ItemDO;
 import org.springframework.stereotype.Service;
 
 /**

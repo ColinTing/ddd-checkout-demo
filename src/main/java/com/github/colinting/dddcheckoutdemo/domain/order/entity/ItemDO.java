@@ -1,7 +1,8 @@
-package com.github.colinting.dddcheckoutdemo.infrastructure.client.dto.response;
+package com.github.colinting.dddcheckoutdemo.domain.order.entity;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -11,9 +12,7 @@ import java.io.Serializable;
  * @version 2026年06月10日 16:00
  */
 @Data
-public class ItemDO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class ItemDO {
 
     private Long itemId;
 
