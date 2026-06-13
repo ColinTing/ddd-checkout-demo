@@ -2,7 +2,7 @@ package com.github.colinting.dddcheckoutdemo.infrastructure.order.supportimpl;
 
 import com.github.colinting.dddcheckoutdemo.domain.order.entity.LineItem;
 import com.github.colinting.dddcheckoutdemo.domain.order.entity.OrderDO;
-import com.github.colinting.dddcheckoutdemo.domain.order.support.OrderRepository;
+import com.github.colinting.dddcheckoutdemo.domain.order.support.OrderSupport;
 import com.github.colinting.dddcheckoutdemo.infrastructure.order.dao.converter.LineItemConverter;
 import com.github.colinting.dddcheckoutdemo.infrastructure.order.dao.converter.OrderConverter;
 import com.github.colinting.dddcheckoutdemo.infrastructure.order.dao.mapper.LineItemMapper;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @RequiredArgsConstructor
-public class OrderRepositoryImpl implements OrderRepository {
+public class OrderSupportImpl implements OrderSupport {
 
     private  final OrderMapper orderMapper;
 

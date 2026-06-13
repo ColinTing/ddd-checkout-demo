@@ -7,8 +7,10 @@ import com.github.colinting.dddcheckoutdemo.application.order.dto.request.Checko
 import com.github.colinting.dddcheckoutdemo.application.order.dto.request.OrderQuery;
 import com.github.colinting.dddcheckoutdemo.application.order.dto.request.UpdateOrderCommand;
 import com.github.colinting.dddcheckoutdemo.domain.order.entity.OrderDO;
-import com.github.colinting.dddcheckoutdemo.domain.order.support.OrderRepository;
-import com.github.colinting.dddcheckoutdemo.domain.order.entity.ItemDO;
+import com.github.colinting.dddcheckoutdemo.domain.order.support.InventorySupport;
+import com.github.colinting.dddcheckoutdemo.domain.order.support.ItemSupport;
+import com.github.colinting.dddcheckoutdemo.domain.order.support.OrderSupport;
+import com.github.colinting.dddcheckoutdemo.infrastructure.client.dto.response.ItemDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,23 +30,23 @@ import java.util.List;
 public class CheckoutService {
 
 
-    private final ItemService itemService;
+    private final ItemSupport itemSupport;
 
-    private final InventoryService inventoryService;
+    private final InventorySupport inventorySupport;
 
-    private final OrderRepository orderRepository;
+    private final OrderSupport orderSupport;
 
     private final OrderDtoAssembler orderDtoAssembler;
 
     // 下单
     public OrderDTO checkout(@Valid CheckoutCommand cmd) {
 
-        ItemDO item = itemService.getItem(cmd.getItemId());
+        ItemDTO item = itemSupport.getItem(cmd.getItemId());
         if (item == null) {
             throw new IllegalArgumentException("Item not found");
         }
 
-        boolean withholdSuccess = inventoryService.withhold(cmd.getItemId(), cmd.getQuantity());
+        boolean withholdSuccess = inventorySupport.withhold(cmd.getItemId(), cmd.getQuantity());
         if (!withholdSuccess) {
             throw new IllegalArgumentException("Inventory not enough");
         }
@@ -58,7 +60,7 @@ public class CheckoutService {
         order.setItemUnitPrice(item.getPriceInCents());
         order.setCount(cmd.getQuantity());
 
-        OrderDO savedOrder = orderRepository.save(order);
+        OrderDO savedOrder = orderSupport.save(order);
 
         return orderDtoAssembler.orderToDTO(savedOrder);
     }

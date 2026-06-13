@@ -9,7 +9,7 @@ import com.github.colinting.dddcheckoutdemo.domain.order.entity.OrderDO;
  * @version 2026年06月10日 17:10
  */
 
-public interface OrderRepository {
+public interface OrderSupport {
 
     OrderDO save(OrderDO order);
 }
