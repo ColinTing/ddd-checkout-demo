@@ -4,7 +4,6 @@ import com.github.colinting.dddcheckoutdemo.domain.order.valueobject.*;
 import lombok.Data;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 订单DO
@@ -38,11 +37,6 @@ public class OrderDO {
     private Integer count;
 
     private Long totalCost;
-
-
-    public OrderId getId() {
-        return  new OrderId(Long.parseLong(UUID.randomUUID().toString()));
-    }
 
     // 把原来一个在ApplicationService的计算迁移到Entity里
     public Long getTotalCost() {

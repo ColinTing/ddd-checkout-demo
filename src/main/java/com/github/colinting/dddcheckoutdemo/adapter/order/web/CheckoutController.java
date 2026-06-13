@@ -26,7 +26,10 @@ public class CheckoutController {
     @PostMapping("checkout")
     @ResultHandler
     public Result<OrderDTO> checkout(Long itemId, Integer quantity) {
-        CheckoutCommand cmd = new CheckoutCommand();
+        CheckoutCommand cmd = CheckoutCommand.builder()
+                .itemId(itemId)
+                .quantity(quantity)
+                .build();
         OrderDTO orderDTO = checkoutService.checkout(cmd);
         return Result.success(orderDTO);
     }
